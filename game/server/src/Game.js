@@ -1,18 +1,19 @@
 const Player = require("./Player")
 const Boss = require("./Boss")
+const Bound = require("./Bound")
 
 class Game {
     constructor() {
         this.settings = {
-            width: 1000,
-            height: 1000,
+            width: 70 * 41,
+            height: 70 * 11,
         }
         this.players = new Array();
 
         setInterval(() => {
             this.update();
             this.sendUpdate();
-        }, 5000 / 60)
+        }, 40)
 
         this.players.push(new Boss({
             game: this
@@ -32,34 +33,62 @@ class Game {
         this.players.forEach(player => {
             this.players.forEach(other => {
                 if (player.id === other.id) return;
-                if (player.shape === "rectangle" && other.shape === "rectangle") {
-                    if (player.x < other.x + other.width &&
-                        player.x + player.width > other.x &&
-                        player.y < other.y + other.height &&
-                        player.y + player.height > other.y) {
-                        // collision detected!
-                        console.log("rectangle");
-                    }
-                } else if (player.shape === "circle" && other.shape === "circle") {
-                    if (Math.sqrt(Math.pow(player.x - other.x, 2) + Math.pow(player.y - other.y, 2)) < player.width / 2 + other.width / 2) {
-                        console.log("circle")
-                    }
-                } else if ((player.shape === "rectangle" && other.shape === "circle") || (player.shape === "circle" && other.shape === "rectangle")) {
-                    if (player.x < other.x + other.width &&
-                        player.x + player.width > other.x &&
-                        player.y < other.y + other.height &&
-                        player.y + player.height > other.y) {
-                        console.log("rect/circle");
-                    }
+                let px = player.x;
+                let py = player.y;
+                let pw = player.type === "bound" ? player.width * 2 : player.width;
+                let ox = other.x;
+                let oy = other.y;
+                let ow = other.type === "bound" ? other.width * 2 : other.width;
+                if (Math.sqrt(Math.pow(px - ox, 2) + Math.pow(py - oy, 2)) <= pw / 2 + ow / 2) {
+                    this.resolveCollision(player, other);
                 }
-
             })
         })
+    }
+
+
+
+    resolveCollision(a, b) {
+        if (a.ignoreCollisions || b.ignoreCollisions) return;
+
+        a.ignoreCollisions = true;
+        b.ignoreCollisions = true;
+
+        let dx = a.x - b.x;
+        let dy = a.y - b.y;
+
+        let ar = a.width >= a.height ? a.width / 2 : a.height / 2;
+        let br = b.width >= b.height ? b.width / 2 : b.height / 2;
+
+        let d = Math.sqrt(dx * dx + dy * dy);
+
+        let m = ar + br - d;
+
+        if (m <= 0) return;
+        if (d === 0) d = 1, dx = 1, dy = 0;
+        else dx /= d, dy /= d;
+
+        let sar = ar * ar;
+        let sbr = br * br;
+
+        let M = sar + sbr;
+        let aM = sbr / M;
+        let bM = sar / M;
+        //bouge les collisions
+
+        a.velocity.x += dx * m * aM * 2;
+        a.velocity.y += dy * m * aM * 2;
+        b.velocity.x -= dx * m * bM * 2;
+        b.velocity.y -= dy * m * bM * 2;
+
+        a.health -= b.strength
+        b.health -= a.strength
     }
 
     update() {
         this.players.forEach(player => {
             player.update();
+            player.ignoreCollisions = false;
         })
 
         this.checkCollisions();

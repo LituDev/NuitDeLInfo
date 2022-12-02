@@ -1,15 +1,78 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link href="https://fonts.cdnfonts.com/css/press-start-2p" rel="stylesheet">
     <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>App</title>
-  </head>
-  <body>
-    <div id="app"></div>
+</head>
+
+<body>
     <script type="module" src="/src/main.js"></script>
-  </body>
+
+    <div class="container" id="hud">
+
+        <div class="hud-perso-boss">
+            <div class="div-bar-boss">
+                <span class="name-boss">VIH</span>
+                <div class="life-bar-boss">
+                    <div id="life-boss" class="life-boss" style="width: 10%"></div>
+                </div>
+            </div>
+            <div class="div-bar-perso">
+                <span class="name-perso">Player</span>
+                <div class="life-bar-perso">
+                    <div id="life-perso" class="life-perso" style="width: 50%"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="ddd" class="container" style="background-color: dark">
+        <div id="home">
+            <h1 class="nes-text"><img src="img/sidash%20logo.png"></h1>
+            <p class="nes-text">Your Goal : Fight the AIDS virus</p>
+            <div class="nes-field">
+                <label for="name_field">Your name</label>
+                <input type="text" id="name_field" class="nes-input">
+            </div>
+            <a href="/index2.html">
+                <button class="nes-btn is-secondary">Credits</button>
+            </a>
+            <button id="play" class="nes-btn is-primary">Play</button>
+            <button type="button" class="nes-btn is-warning"
+                onclick="document.getElementById('dialog-default').showModal();">
+                Controls
+            </button>
+            <dialog class="nes-dialog" id="dialog-default">
+                <form method="dialog" style="background: url('tuto.png') center center no-repeat fixed">
+                    <p class="title">Controls</p>
+                    <menu class="dialog-menu" style="padding-left: 0; margin-top: 20vh; width: 30vh;">
+                        <button class="nes-btn is-success">Ok</button>
+                    </menu>
+                </form>
+            </dialog>
+        </div>
+        <footer>
+            <section class="icon-list">
+                <!-- twitter -->
+                <i class="nes-icon twitter is-large"></i>
+
+                <!-- instagram -->
+                <i class="nes-icon instagram is-large"></i>
+
+                <!-- github -->
+                <i class="nes-icon github is-large"></i>
+
+                <!-- linkedin -->
+                <i class="nes-icon linkedin is-large"></i>
+            </section>
+            <p>Â© 2022 SIDASH</p>
+        </footer>
+    </div>
+</body>
+
 </html>

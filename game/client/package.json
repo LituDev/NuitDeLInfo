@@ -12,6 +12,7 @@
     "vite": "^3.2.3"
   },
   "dependencies": {
+    "@pixi/sound": "^5.0.0",
     "pixi.js-legacy": "^7.0.4"
   }
 }

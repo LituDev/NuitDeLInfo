@@ -7,6 +7,10 @@ class Player extends Entity {
         this.type = "player";
         this.speed = 1;
         this.shape = "rectangle";
+        this.width = 50;
+        this.height = 100;
+        this.state = "idle";
+        this.name = "Player";
     }
 
     sendInit() {
@@ -15,7 +19,7 @@ class Player extends Entity {
             type: "init",
             id: this.id,
             width: this.game.width,
-            height: this.game.height
+            height: this.game.height,
         }))
     }
 
@@ -29,6 +33,25 @@ class Player extends Entity {
             type: "update",
             players: this.game.players.map(player => player.getPacket())
         }))
+
+        switch (this.keyState) {
+            case "ArrowUp":
+                this.velocity.y -= 5;
+                this.velocity.x = 0;
+                break;
+            case "ArrowDown":
+                this.velocity.y += 5;
+                this.velocity.x = 0;
+                break;
+            case "ArrowLeft":
+                this.velocity.x -= 5;
+                this.velocity.y = 0;
+                break;
+            case "ArrowRight":
+                this.velocity.x += 5;
+                this.velocity.y = 0;
+                break;
+        }
     }
 
     send(message) {
@@ -45,16 +68,24 @@ class Player extends Entity {
         //console.log("Message received : " + message);
 
         switch (message.type) {
-            case "mouse":
+            /*case "mouse":
                 this.onMouse(message);
                 break;
+            */
+            case 'keyboard':
+                this.onKeyboard(message);
         }
+    }
+
+    onKeyboard(message) {
+        this.keyState = message.state
+        this.name = message.name;
     }
 
     onMouse(message) {
         this.mouse.x = message.x;
         this.mouse.y = message.y;
-    }  
+    }
 }
 
 module.exports = Player;
